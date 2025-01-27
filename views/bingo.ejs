@@ -21,18 +21,13 @@
                 <div class="card">
                     <div class="card-body p-2">
                         <div class="bingo-container">
-                            <div class="bingo-grid" id="grid-<%= user.username %>" data-has-bingo="false">
+                            <div class="bingo-grid" id="grid-<%= user.username %>" data-username="<%= user.username %>">
                                 <% userCards[user.username].forEach(item => { %>
-                                    <form action="/bingo/click" method="POST" class="bingo-form" style="display: contents;">
-                                        <button class="bingo-cell <%= item.checked ? 'checked' : '' %>"
-                                                type="submit"
-                                                name="id"
-                                                value="<%= item.id %>"
-                                                data-id="<%= item.id %>"
-                                                <%= user.username === username ? '' : 'disabled' %>>
-                                            <%= item.value %>
-                                        </button>
-                                    </form>
+                                    <button class="bingo-cell <%= item.checked ? 'checked' : '' %>"
+                                            data-id="<%= item.id %>"
+                                            <%= user.username === username ? '' : 'disabled' %>>
+                                        <%= item.value %>
+                                    </button>
                                 <% }) %>
                             </div>
                         </div>
@@ -98,53 +93,43 @@
     <br>
     <br>
     <br>
+    <script src="/socket.io/socket.io.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+            const socket = io();
             const bingoModal = new bootstrap.Modal(document.getElementById('bingoModal'));
             const bingoMessage = document.getElementById('bingoMessage');
-            
+
             // Handle cell clicks
-            document.querySelectorAll('.bingo-form').forEach(form => {
-                form.addEventListener('submit', async function(e) {
-                    e.preventDefault();
-                    const button = this.querySelector('button');
-                    const cellId = button.value;
-                    const username = this.closest('.bingo-grid').id.replace('grid-', '');
-
-                    try {
-                        const response = await fetch('/bingo/click', {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json',
-                                'Accept': 'application/json'
-                            },
-                            body: JSON.stringify({ id: cellId }),
-                        });
-
-                        if (!response.ok) throw new Error('Network response was not ok');
-                        
-                        const data = await response.json();
-                        if (data.success && data.bingoItems) {
-                            const grid = document.getElementById(`grid-${username}`);
-                            data.bingoItems.forEach((item, index) => {
-                                const cell = grid.querySelectorAll('.bingo-cell')[index];
-                                if (cell) {
-                                    cell.classList.toggle('checked', item.checked);
-                                }
-                            });
-
-                            if (data.hasBingo && grid.dataset.hasBingo !== 'true') {
-                                grid.dataset.hasBingo = 'true';
-                                bingoMessage.textContent = `Congratulations ${data.username}, You Have Bingo!!`;
-                                bingoModal.show();
-                            }
-                        }
-                    } catch (error) {
-                        console.error('Error updating cell:', error);
-                        this.submit();
-                    }
+            document.querySelectorAll('.bingo-cell').forEach(cell => {
+                cell.addEventListener('click', function() {
+                    const cellId = this.dataset.id;
+                    socket.emit('cellClicked', { id: cellId, username: "<%= username %>" });
                 });
+            });
+
+            // Listen for board updates
+            socket.on('updateBoard', (data) => {
+                const { username, bingoItems, hasBingo } = data;
+
+                const grid = document.getElementById(`grid-${username}`);
+                if (grid) {
+                    bingoItems.forEach((item) => {
+                        const cell = grid.querySelector(`[data-id="${item.id}"]`);
+                        if (cell) {
+                            cell.classList.toggle('checked', item.checked);
+                        }
+                    });
+
+                    if (hasBingo && grid.dataset.hasBingo !== 'true') {
+                        grid.dataset.hasBingo = 'true';
+                        bingoMessage.textContent = username === "<%= username %>"
+                            ? "Congratulations! You Have Bingo!"
+                            : `Congratulations ${username}! You Have Bingo!`;
+                        bingoModal.show();
+                    }
+                }
             });
 
             // Handle delete button click
