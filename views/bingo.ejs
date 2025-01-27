@@ -23,11 +23,11 @@
                         <div class="bingo-container">
                             <div class="bingo-grid" id="grid-<%= user.username %>" data-username="<%= user.username %>">
                                 <% userCards[user.username].forEach(item => { %>
-                                    <button class="bingo-cell <%= item.checked ? 'checked' : '' %>"
-                                            data-id="<%= item.id %>"
-                                            <%= user.username === username ? '' : 'disabled' %>>
-                                        <%= item.value %>
-                                    </button>
+                                  <button class="bingo-cell <%= item.checked ? 'checked' : '' %>"
+                                    data-id="<%= item.id %>"
+                                    <%= user.username === username ? '' : 'disabled' %>>
+                                    <%= item.value %>
+                                  </button>
                                 <% }) %>
                             </div>
                         </div>

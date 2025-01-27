@@ -36,6 +36,52 @@ const pool = new Pool({
 // Helper function to sanitize table names
 const sanitizeTableName = (username) => username.replace(/[^a-zA-Z0-9_]/g, "");
 
+// Check for Bingo
+const checkForBingo = async (username) => {
+  const tableName = sanitizeTableName(username + "_bingo");
+
+  // Get the current board state with positions
+  const result = await pool.query(`
+    SELECT checked, position 
+    FROM "${tableName}" 
+    ORDER BY position
+  `);
+
+  const board = result.rows;
+  const size = 5; // 5x5 grid
+
+  // Convert to 2D array for easier checking
+  const grid = Array(size)
+    .fill()
+    .map(() => Array(size).fill(false));
+
+  board.forEach((cell, index) => {
+    const row = Math.floor(index / size);
+    const col = index % size;
+    grid[row][col] = cell.checked;
+  });
+
+  // Check rows
+  for (let row = 0; row < size; row++) {
+    if (grid[row].every((cell) => cell)) return true;
+  }
+
+  // Check columns
+  for (let col = 0; col < size; col++) {
+    if (grid.every((row) => row[col])) return true;
+  }
+
+  // Check diagonals
+  const diagonal1 = Array(size)
+    .fill()
+    .every((_, i) => grid[i][i]);
+  const diagonal2 = Array(size)
+    .fill()
+    .every((_, i) => grid[i][size - 1 - i]);
+
+  return diagonal1 || diagonal2;
+};
+
 // Initialize all tables
 const initializeTables = async () => {
   try {
@@ -238,12 +284,55 @@ app.get("/bingo", async (req, res) => {
 });
 
 // Socket.IO logic remains as in the previous code
+// ... All the existing imports, configurations, helper functions, and routes ...
+
+// Handle Socket.IO connections
+io.on('connection', (socket) => {
+    console.log('A user connected');
+
+    // Listen for 'cellClicked' events from the client
+    socket.on('cellClicked', async (data) => {
+        const { username, id } = data;
+
+        try {
+            const tableName = sanitizeTableName(username + '_bingo');
+
+            // Toggle the clicked cell in the database
+            await pool.query(
+                `UPDATE "${tableName}" SET checked = NOT checked WHERE id = $1`,
+                [id]
+            );
+
+            // Check for bingo
+            const hasBingo = await checkForBingo(username);
+
+            // Fetch the updated bingo board
+            const bingoItems = await pool.query(
+                `SELECT * FROM "${tableName}" ORDER BY COALESCE(position, id)`
+            );
+
+            // Broadcast the updated board to all clients
+            io.emit('updateBoard', {
+                username,
+                bingoItems: bingoItems.rows,
+                hasBingo
+            });
+        } catch (err) {
+            console.error('Error updating cell:', err);
+        }
+    });
+
+    socket.on('disconnect', () => {
+        console.log('A user disconnected');
+    });
+});
 
 // Initialize tables and start server
 initializeTables()
   .then(() => {
-    server.listen(3000, () => {
-      console.log("Server running on port 3000");
+    const PORT = process.env.PORT || 3000; // Use environment variable for the port
+    server.listen(PORT, () => {
+      console.log(`Server running on port ${PORT}`);
     });
   })
   .catch((err) => {
