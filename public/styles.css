@@ -54,6 +54,7 @@ label {
 
 .bingo-cell {
   overflow: hidden;
+  color: black;
   aspect-ratio: 1;
   width: 100%;
   background-color: lightblue;
