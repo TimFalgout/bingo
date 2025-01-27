@@ -57,16 +57,16 @@ const initializeTables = async () => {
     await pool.query(`
       INSERT INTO bingo_items (value)
       SELECT unnest(ARRAY[
-        'Face mask called', 'Missed fieldgoal', 'Home fumbles', 'Away fumbles',
-        'Home throws interception', 'Away throws interception', 'Safety',
-        'Home leads at halftime', 'Away leads at halftime', '2pt conversion',
+        'Face mask called', 'Missed fieldgoal', 'Eagles fumble', 'Chiefs fumble',
+        'Eagles throw interception', 'Chiefs throw interception', 'Safety',
+        'Eagles lead at halftime', 'Chiefs lead at halftime', '2pt conversion',
         'Interception to a touchdown', 'fumble to a touchdown',
-        'Home leads at end of 1st qtr', 'Away leads at end of 1st qtr',
-        'Home leads at end of 3rd qtr', 'Away leads at end of 3rd quarter',
-        'Game tied at end of 4th qtr', 'Home team wins game', 'Away team wins game',
+        'Eagles lead at end of 1st qtr', 'Chiefs lead at end of 1st qtr',
+        'Eagles lead at end of 3rd qtr', 'Chiefs lead at end of 3rd quarter',
+        'Game tied at end of 4th qtr', 'Eagles win the game', 'Chiefs win the game',
         'Coaches challenge', 'Punt return for TD', 'Kickoff return for TD',
-        'Successful 4th down conversion', 'Home quarterback sacked',
-        'Away quarterback sacked', 'Rushing TD', 'Passing TD', 'quarterback sneak',
+        'Successful 4th down conversion', 'Eagles quarterback sacked',
+        'Chiefs quarterback sacked', 'Rushing TD', 'Passing TD', 'quarterback sneak',
         'Pass interference called', 'Offensive holding called'
       ])
       WHERE NOT EXISTS (SELECT 1 FROM bingo_items);
