@@ -174,8 +174,9 @@ const createOrResetBingoBoard = async (username) => {
 };
 
 // Drop all dynamically created bingo boards (Admin action)
-const dropAllBingoTables = async () => {
+const dropAllTables = async () => {
   try {
+    // Drop all user-specific bingo tables
     const tables = await pool.query(`
       SELECT tablename 
       FROM pg_tables 
@@ -185,10 +186,17 @@ const dropAllBingoTables = async () => {
     for (const row of tables.rows) {
       await pool.query(`DROP TABLE IF EXISTS "${row.tablename}" CASCADE`);
     }
-
     console.log("All bingo tables dropped successfully.");
+
+    // Drop the `users` table
+    await pool.query(`DROP TABLE IF EXISTS users CASCADE`);
+    console.log("Users table dropped successfully.");
+
+    // Reinitialize tables
+    await initializeTables();
+    console.log("All tables reinitialized successfully.");
   } catch (err) {
-    console.error("Error dropping bingo tables:", err);
+    console.error("Error dropping all tables:", err);
     throw err;
   }
 };
@@ -244,9 +252,8 @@ app.post("/clear-database", async (req, res) => {
   }
 
   try {
-    await dropAllBingoTables();
-    await initializeTables();
-    res.status(200).json({ success: true });
+    await dropAllTables();
+    res.status(200).json({ success: true, message: "Database cleared successfully!" });
   } catch (err) {
     console.error("Failed to clear database:", err);
     res.status(500).json({ error: "Failed to clear database." });
