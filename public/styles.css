@@ -73,9 +73,9 @@ label {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 4px;
+  padding: 2px;
   /* Adjusted font size scale */
-  font-size: clamp(14px, 2.5vw, 18px);
+  font-size: clamp(12px, 2.5vw, 18px);
   /* Reset button styles */
   appearance: none;
   -webkit-appearance: none;
