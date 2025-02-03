@@ -27,6 +27,12 @@ body {
   font-family: "Bubblegum Sans", serif;
 }
 
+.background-banner {
+  background: white;
+  display: flex;
+  justify-content: center;
+}
+
 h1 {
   color: white;
   /*font-family: "Chewy", serif;*/
