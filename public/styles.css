@@ -30,12 +30,12 @@ body {
 .background-banner {
   background: white;
   display: flex;
-  justify-content: center;
+  justify-content: space-around;
   align-items: center;
   border-radius: 10px;
   width: auto;
   height: auto;
-  margin-top: 4px;
+  padding-top: 4px;
 }
 
 .vs {
