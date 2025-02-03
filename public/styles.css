@@ -32,9 +32,17 @@ h1 {
   /*font-family: "Chewy", serif;*/
 }
 
+.eagles-color {
+  color: #004c54;
+}
+
 h3 {
   color: white;
   /*font-family: "Chewy", serif;*/
+}
+
+.chiefs-color {
+  color: #e31837;
 }
 
 h4 {
