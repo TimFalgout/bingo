@@ -21,7 +21,8 @@ html {
 }
 
 html.bingo-page {
-  background-image: url("./images/wallpaper.jpg");
+  /* background-image: url("./images/wallpaper.jpg"); */
+  background: #213555;
 }
 
 html.index-page {
