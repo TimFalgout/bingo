@@ -22,7 +22,7 @@ html {
 
 html.bingo-page {
   /* background-image: url("./images/wallpaper.jpg"); */
-  background: #393E46;
+  background: #1b262c;
 }
 
 html.index-page {
@@ -36,7 +36,7 @@ body {
 }
 
 .background-banner {
-  background: white;
+  background: #bbe1fa;
   display: flex;
   justify-content: space-around;
   align-items: center;
@@ -52,7 +52,6 @@ body {
 
 h1 {
   color: white;
-  /*font-family: "Chewy", serif;*/
 }
 
 .eagles-color {
@@ -61,7 +60,6 @@ h1 {
 
 h3 {
   color: white;
-  /*font-family: "Chewy", serif;*/
 }
 
 .chiefs-color {
@@ -98,7 +96,7 @@ label {
   color: black;
   aspect-ratio: 1;
   width: 100%;
-  background-color: lightblue;
+  background-color: #bbe1fa;
   border: 1px solid #333;
   text-align: center;
   display: flex;
@@ -119,8 +117,8 @@ label {
 }
 
 .bingo-cell.checked {
-  background-color: #004c54;
-  color: #e31837;
+  background-color: #0f4c75;
+  color: white;
 }
 
 /* Media queries for different screen sizes */
