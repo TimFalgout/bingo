@@ -295,43 +295,43 @@ app.get("/bingo", async (req, res) => {
 
 // Handle Socket.IO connections
 io.on('connection', (socket) => {
-    console.log('A user connected');
+  console.log('A user connected');
 
-    // Listen for 'cellClicked' events from the client
-    socket.on('cellClicked', async (data) => {
-        const { username, id } = data;
+  // Listen for 'cellClicked' events from the client
+  socket.on('cellClicked', async (data) => {
+    const { username, id } = data;
 
-        try {
-            const tableName = sanitizeTableName(username + '_bingo');
+    try {
+      const tableName = sanitizeTableName(username + '_bingo');
 
-            // Toggle the clicked cell in the database
-            await pool.query(
-                `UPDATE "${tableName}" SET checked = NOT checked WHERE id = $1`,
-                [id]
-            );
+      // Toggle the clicked cell in the database
+      await pool.query(
+        `UPDATE "${tableName}" SET checked = NOT checked WHERE id = $1`,
+        [id]
+      );
 
-            // Check for bingo
-            const hasBingo = await checkForBingo(username);
+      // Check for bingo
+      const hasBingo = await checkForBingo(username);
 
-            // Fetch the updated bingo board
-            const bingoItems = await pool.query(
-                `SELECT * FROM "${tableName}" ORDER BY COALESCE(position, id)`
-            );
+      // Fetch the updated bingo board
+      const bingoItems = await pool.query(
+        `SELECT * FROM "${tableName}" ORDER BY COALESCE(position, id)`
+      );
 
-            // Broadcast the updated board to all clients
-            io.emit('updateBoard', {
-                username,
-                bingoItems: bingoItems.rows,
-                hasBingo
-            });
-        } catch (err) {
-            console.error('Error updating cell:', err);
-        }
-    });
+      // Broadcast the updated board to all clients
+      io.emit('updateBoard', {
+        username,
+        bingoItems: bingoItems.rows,
+        hasBingo
+      });
+    } catch (err) {
+      console.error('Error updating cell:', err);
+    }
+  });
 
-    socket.on('disconnect', () => {
-        console.log('A user disconnected');
-    });
+  socket.on('disconnect', () => {
+    console.log('A user disconnected');
+  });
 });
 
 // Initialize tables and start server
