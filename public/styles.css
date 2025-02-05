@@ -25,7 +25,7 @@ html.bingo-page {
 }
 
 html.index-page {
-  background: blue;
+  background-image: url("./images/grass.jpg");
 }
 
 body {
