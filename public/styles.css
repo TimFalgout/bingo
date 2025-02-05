@@ -21,11 +21,11 @@ html {
 }
 
 html.bingo-page {
-  background-image: url("./images/4823270.jpg");
+  background-image: url("./images/grass.jpg");
 }
 
 html.index-page {
-  background-image: url("./images/grass.jpg");
+  background-image: url("./images/4823270.jpg");
 }
 
 body {
