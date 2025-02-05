@@ -46,6 +46,11 @@ body {
   padding-top: 6px;
 }
 
+.helmet-comtainer {
+  display: flex;
+  flex-direction: row;
+}
+
 .vs {
   color: black;
 }
