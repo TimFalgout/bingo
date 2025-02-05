@@ -52,28 +52,32 @@ body {
 
 h1 {
   color: white;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.6);
 }
 
 .eagles-color {
   color: #004c54;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.6);
 }
 
 h3 {
   color: white;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.6);
 }
 
 .chiefs-color {
   color: #e31837;
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.6);
 }
 
 h4 {
   color: white;
-  /*font-family: "Chewy", serif;*/
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.6);
 }
 
 label {
   color: white;
-  /*font-family: "Chewy", serif;*/
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.6);
 }
 
 /*Bingo Container Responsive CSS*/
