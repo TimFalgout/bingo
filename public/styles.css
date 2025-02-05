@@ -49,6 +49,7 @@ body {
 .helmet-comtainer {
   display: flex;
   flex-direction: row;
+  justify-content: center;
 }
 
 .vs {
