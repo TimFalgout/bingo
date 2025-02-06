@@ -13,21 +13,28 @@ body {
   padding: 0;
 }
 
-html {
+.background {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-  background-attachment: fixed;
 }
 
-html.bingo-page {
+.bingo-page {
   background-image: url("./images/1347308.png");
   max-width: 100%;
   height: auto;
 }
 
-html.index-page {
+.index-page {
   background-image: url("./images/4823270.jpg");
+  max-width: 100%;
+  height: auto;
 }
 
 body {
