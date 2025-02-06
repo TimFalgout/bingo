@@ -21,18 +21,21 @@
   height: 100%;
   z-index: -1;
   background-size: cover;
-  background-position: center;
+  background-position: center center;
   background-repeat: no-repeat;
+  overflow: hidden;
 }
 
-.bingo-page {
+body.bingo-page .background {
   background-image: url("./images/1347308.png");
+  background-position: center center;
   max-width: 100%;
   height: auto;
 }
 
-.index-page {
+body.index-page .background {
   background-image: url("./images/4823270.jpg");
+  background-position: center center;
   max-width: 100%;
   height: auto;
 }
