@@ -22,7 +22,8 @@ html {
 
 html.bingo-page {
   background-image: url("./images/1347308.png");
-  /* background: #1b262c; */
+  max-width: 100%;
+  height: auto;
 }
 
 html.index-page {
