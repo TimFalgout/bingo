@@ -26,14 +26,14 @@
   overflow: hidden;
 }
 
-body.bingo-page .background {
+.bingo-page {
   background-image: url("./images/1347308.png");
   background-position: center center;
   max-width: 100%;
   height: auto;
 }
 
-body.index-page .background {
+.index-page {
   background-image: url("./images/4823270.jpg");
   background-position: center center;
   max-width: 100%;
