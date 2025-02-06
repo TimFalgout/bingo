@@ -19,7 +19,6 @@
   left: 0;
   width: 100%;
   height: 100%;
-  z-index: -1;
   background-size: cover;
   background-position: center center;
   background-repeat: no-repeat;
@@ -29,15 +28,15 @@
 .bingo-page {
   background-image: url("./images/1347308.png");
   background-position: center center;
-  max-width: 100%;
-  height: auto;
+  /* max-width: 100%; */
+  /* height: auto; */
 }
 
 .index-page {
   background-image: url("./images/4823270.jpg");
   background-position: center center;
-  max-width: 100%;
-  height: auto;
+  /* max-width: 100%; */
+  /* height: auto; */
 }
 
 body {
