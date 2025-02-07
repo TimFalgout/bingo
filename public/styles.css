@@ -17,7 +17,7 @@ body {
   /* Required for pseudo-element */
 }
 
-/* Use a pseudo-element to create a fixed background */
+/* pseudo-element to create a fixed background */
 body::before {
   content: "";
   position: fixed;
