@@ -30,8 +30,9 @@
       </div>
       <br>
       <div class="form-floating">
-        <input type="password" class="form-control" id="password" name="password" required>
-        <label for="floatingPassword">4 Digit Pin Number</label>
+        <input type="password" class="form-control" id="password" name="password" required pattern="^[0-9]{4}$"
+          inputmode="numeric" title="Please enter exactly 4 digits (0-9).">
+        <label for="password">4 Digit Pin Number</label>
       </div>
       <br>
       <button class="btn btn-primary w-100 py-2" type="submit">Submit</button>
