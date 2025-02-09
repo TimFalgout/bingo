@@ -36,6 +36,54 @@ const pool = new Pool({
 // Helper function to sanitize table names
 const sanitizeTableName = (username) => username.replace(/[^a-zA-Z0-9_]/g, "");
 
+
+// New helper function to create a board only if it doesn't already exist ++++++++++++++++++++++++++++++++++++++++++++
+const ensureBingoBoardExists = async (username) => {
+  const tableName = sanitizeTableName(username + "_bingo");
+
+  // Create the table if it doesn't exist
+  await pool.query(`
+    CREATE TABLE IF NOT EXISTS "${tableName}" (
+      id SERIAL PRIMARY KEY,
+      value VARCHAR(50) NOT NULL,
+      checked BOOLEAN DEFAULT FALSE,
+      position INTEGER
+    );
+  `);
+
+  // Check if the board already has entries
+  const result = await pool.query(`SELECT COUNT(*) FROM "${tableName}"`);
+  const count = parseInt(result.rows[0].count, 10);
+
+  // Only populate the board if it is empty
+  if (count === 0) {
+    const randomItems = await pool.query(`
+      SELECT value 
+      FROM bingo_items 
+      ORDER BY RANDOM() 
+      LIMIT 25
+    `);
+
+    const valuesList = randomItems.rows
+      .map((_, index) => `($${index * 2 + 1}, $${index * 2 + 2})`)
+      .join(", ");
+
+    const queryParams = randomItems.rows.flatMap((item, index) => [
+      item.value,
+      index,
+    ]);
+
+    await pool.query(
+      `
+      INSERT INTO "${tableName}" (value, position)
+      VALUES ${valuesList}
+      `,
+      queryParams
+    );
+  }
+};
+// end new code +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+
 // Check for Bingo
 const checkForBingo = async (username) => {
   const tableName = sanitizeTableName(username + "_bingo");
@@ -206,6 +254,7 @@ app.get("/", (req, res) => {
   res.render("index", { message: null });
 });
 
+// New auth route ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 app.post("/auth", async (req, res) => {
   const { username, password } = req.body;
 
@@ -217,9 +266,11 @@ app.post("/auth", async (req, res) => {
     const user = userResult.rows[0];
 
     if (user) {
+      // Existing user: validate password and ensure the bingo board exists.
       if (await bcrypt.compare(password, user.password)) {
         req.session.username = username;
-        await createOrResetBingoBoard(username);
+        // Ensure that the bingo board is created only if it doesn't already exist.
+        await ensureBingoBoardExists(username);
         return res.redirect("/bingo");
       } else {
         return res.render("index", {
@@ -227,15 +278,16 @@ app.post("/auth", async (req, res) => {
         });
       }
     } else {
+      // New user registration: hash the password, insert into the users table,
+      // and create a new bingo board.
       const hashedPassword = await bcrypt.hash(password, 10);
       await pool.query(
         "INSERT INTO users (username, password) VALUES ($1, $2)",
         [username, hashedPassword]
       );
 
-      await createOrResetBingoBoard(username);
-
       req.session.username = username;
+      await ensureBingoBoardExists(username); // This creates a new board since it is empty.
       return res.redirect("/bingo");
     }
   } catch (err) {
@@ -243,6 +295,7 @@ app.post("/auth", async (req, res) => {
     res.render("index", { message: "An error occurred. Please try again." });
   }
 });
+// End new auth route ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
 
 app.post("/clear-database", async (req, res) => {
   const { password } = req.body;
