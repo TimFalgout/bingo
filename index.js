@@ -166,7 +166,7 @@ const initializeTables = async () => {
         'Chiefs quarterback sacked', 'Rushing TD', 'Passing TD', 'quarterback sneak',
         'Pass interference called', 'Offensive holding called', 'Taylor Swift shown in game',
         'Dunkin commercial', 'Ray-Ban Meta commercial', 'Michelob Ultra commercial',
-        'Bud Light commercial', 'Doritos commercial', 'Clydesdale Budwiser commercial',
+        'Bud Light commercial', 'Doritos commercial', 'Clydesdale Budwiser commercial'
       ])
       WHERE NOT EXISTS (SELECT 1 FROM bingo_items);
     `);
